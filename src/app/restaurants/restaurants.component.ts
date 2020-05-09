@@ -27,4 +27,28 @@ export class RestaurantsComponent implements OnInit {
     });
   }
 
+  add(name: string): void {
+    name = name.trim();
+    if (!name) { return; }
+    this.restaurantService.addRestaurant({ name } as IRestaurant)
+      .subscribe(restaurant => {
+        this.restaurants.push(restaurant);
+      });
+  }
+
+  delete(restaurant: IRestaurant): void {
+    this.restaurants = this.restaurants.filter(r => r !== restaurant);
+    this.restaurantService.deleteRestaurant(restaurant).subscribe();
+  }
+
+  search(term: string): void {
+    if (term.length){
+      this.restaurantService.searchRestaurants(term).subscribe(restaurants => {
+        this.restaurants = restaurants;
+      });
+    } else {
+      this.getRestaurants(); 
+    }
+  }
+
 }

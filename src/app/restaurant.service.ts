@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IRestaurant } from './interfaces/restaurant';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
 
@@ -25,13 +25,57 @@ export class RestaurantService {
   }
 
   /** GET hero by id. Will 404 if id not found */
-getRestaurant(id: number): Observable<IRestaurant> {
+  getRestaurant(id: number): Observable<IRestaurant> {
+    const url = `${this.restaurantsAPI}/${id}`;
+    return this.http.get<IRestaurant>(url).pipe(
+      tap(_ => this.log(`fetched restaurant id=${id}`)),
+      catchError(this.handleError<IRestaurant>(`getHero id=${id}`))
+    );
+  }
+
+  updateRestaurant(restaurant: IRestaurant): Observable<void> {
+    return this.http.put(`${this.restaurantsAPI}`, restaurant, this.httpOptions).pipe(
+      tap(() => this.log(`Updated restaurant ${restaurant.id}`)),
+      catchError(this.handleError<any>('updateHero'))
+    )
+  }
+
+  /** POST: add a new hero to the server */
+  addRestaurant(restaurant: IRestaurant): Observable<IRestaurant> {
+    return this.http.post<IRestaurant>(this.restaurantsAPI, restaurant, this.httpOptions).pipe(
+      tap((newRestaurant: IRestaurant) => this.log(`added restaurant w/ id=${newRestaurant.id}`)),
+      catchError(this.handleError<IRestaurant>('addRestaurant'))
+    );
+  }
+
+  /** DELETE: Delete Restaurant from Server */
+deleteRestaurant(restaurant: IRestaurant | number): Observable<IRestaurant> {
+  const id = typeof restaurant === 'number' ? restaurant : restaurant.id;
   const url = `${this.restaurantsAPI}/${id}`;
-  return this.http.get<IRestaurant>(url).pipe(
-    tap(_ => this.log(`fetched restaurant id=${id}`)),
-    catchError(this.handleError<IRestaurant>(`getHero id=${id}`))
+
+  return this.http.delete<IRestaurant>(url, this.httpOptions).pipe(
+    tap(_ => this.log(`deleted restaurant id=${id}`)),
+    catchError(this.handleError<IRestaurant>('deleteRestaurant'))
   );
 }
+
+/* GET Restaurants whose name contains search term */
+searchRestaurants(term: string): Observable<IRestaurant[]> {
+  if (!term.trim()) {
+    // if not search term, return empty hero array.
+    return of([]);
+  }
+  return this.http.get<IRestaurant[]>(`${this.restaurantsAPI}/?name=${term}`).pipe(
+    tap(x => x.length ?
+       this.log(`found restaurants matching "${term}"`) :
+       this.log(`no restaurants matching "${term}"`)),
+    catchError(this.handleError<IRestaurant[]>('searchRestaurants', []))
+  );
+}
+
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
   /**
    * Handle Http operation that failed.

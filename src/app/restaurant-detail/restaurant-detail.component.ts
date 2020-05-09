@@ -35,4 +35,10 @@ export class RestaurantDetailComponent implements OnInit {
     this.location.back();
   }
 
+  save(): void {
+    this.restaurantService.updateRestaurant(this.restaurant).subscribe(() => {
+      this.location.back();
+    });
+  }
+
 }
