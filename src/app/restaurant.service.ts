@@ -11,7 +11,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 })
 export class RestaurantService {
 
-  private restaurantsAPI = 'api/restaurants';
+  private restaurantsAPI = 'http://192.168.0.29:3000/restaurants';
   constructor(private messageService: MessageService,
     private http: HttpClient,
   ) { }
@@ -36,7 +36,7 @@ export class RestaurantService {
   updateRestaurant(restaurant: IRestaurant): Observable<void> {
     return this.http.put(`${this.restaurantsAPI}`, restaurant, this.httpOptions).pipe(
       tap(() => this.log(`Updated restaurant ${restaurant.id}`)),
-      catchError(this.handleError<any>('updateHero'))
+      catchError(this.handleError<any>('updateRestaurant'))
     )
   }
 
