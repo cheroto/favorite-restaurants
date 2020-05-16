@@ -13,3 +13,4 @@ RUN npm run build --prod
 FROM nginx:1.15.8-alpine
 
 COPY --from=builder /usr/src/app/dist/favorite-restaurants/ /usr/share/nginx/html
+CMD [ "/usr/share/nginx/html/docker-entrypoint.sh" ]

@@ -21,7 +21,9 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/env.js",
+              "src/docker-entrypoint.sh"
             ],
             "styles": [
               "src/styles.css"

@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
+import { EnvService } from './env.service';
 
 
 @Injectable({
@@ -11,10 +12,13 @@ import { catchError, map, tap } from 'rxjs/operators';
 })
 export class RestaurantService {
 
-  private restaurantsAPI = 'http://192.168.0.29:3000/restaurants';
+  private restaurantsAPI;
   constructor(private messageService: MessageService,
     private http: HttpClient,
-  ) { }
+    private env: EnvService
+  ) { 
+    this.restaurantsAPI = env.apiUrl;
+  }
 
   getRestaurants(): Observable<IRestaurant[]> {
     return this.http.get<IRestaurant[]>(this.restaurantsAPI)

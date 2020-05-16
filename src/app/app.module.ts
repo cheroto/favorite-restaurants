@@ -12,6 +12,7 @@ import { HttpClientModule }    from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService }  from './in-memory-data.service';
 import { RestaurantSearchComponent } from './restaurant-search/restaurant-search.component';
+import { EnvServiceProvider } from './env.service.provider';
 
 
 @NgModule({
@@ -32,7 +33,7 @@ import { RestaurantSearchComponent } from './restaurant-search/restaurant-search
     //   InMemoryDataService, { dataEncapsulation: false }
     // )
   ],
-  providers: [],
+  providers: [EnvServiceProvider],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
