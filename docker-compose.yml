@@ -1,0 +1,19 @@
+version: "3.1"
+services:
+  web:
+    image: web-app
+    deploy:
+      replicas: 2
+    ports:
+     - "8080:80"
+    environment:
+     - apiUrl=http://localhost:4000/restaurants
+  api:
+    image: restaurants-api
+    deploy:
+      replicas: 2
+    ports:
+     - 4000:4000
+    environment:
+     - database=mySQL
+     - port=4000
