@@ -13,11 +13,18 @@ import { EnvService } from './env.service';
 export class RestaurantService {
 
   private restaurantsAPI;
+  private readonly localAPI = 'local';
+
   constructor(private messageService: MessageService,
     private http: HttpClient,
     private env: EnvService
   ) { 
-    this.restaurantsAPI = env.apiUrl;
+    if (env.apiUrl !== this.localAPI) {      
+      this.restaurantsAPI = env.apiUrl;
+    } else {
+      this.restaurantsAPI = 'api/restaurants'
+    }
+    console.info(this.restaurantsAPI, env.apiUrl);
   }
 
   getRestaurants(): Observable<IRestaurant[]> {
