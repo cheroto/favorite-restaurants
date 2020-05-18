@@ -13,4 +13,4 @@ RUN npm run build --prod
 FROM nginx:1.15.8-alpine
 
 COPY --from=builder /usr/src/app/dist/favorite-restaurants/ /usr/share/nginx/html
-CMD [ "/usr/share/nginx/html/docker-entrypoint.sh" ]
+CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/env.js > /usr/share/nginx/html/env.js && exec nginx -g 'daemon off;'"]
